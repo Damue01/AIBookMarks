@@ -224,11 +224,11 @@ function initTiltCards() {
             var y = e.clientY - rect.top;
             var centerX = rect.width / 2;
             var centerY = rect.height / 2;
-            var rotateX = ((y - centerY) / centerY) * -6;
-            var rotateY = ((x - centerX) / centerX) * 6;
+            var rotateX = ((y - centerY) / centerY) * -2.5;
+            var rotateY = ((x - centerX) / centerX) * 2.5;
 
             card.style.transform =
-                'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-4px)';
+                'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-2px)';
 
             if (glow) {
                 glow.style.left = x + 'px';
