@@ -4,14 +4,17 @@ export const DEFAULT_BATCH_SIZE = 30;
 export const MAX_BACKUPS_DEFAULT = 10;
 export const AUTO_CLASSIFY_DEFAULT = true;
 
-export const AI_MODELS: Record<AIProvider, string[]> = {
+/** Non-binding model name suggestions — users can freely type any model name. */
+export const AI_MODEL_SUGGESTIONS: Record<AIProvider, string[]> = {
   openai: [
     'gpt-4o',
     'gpt-4o-mini',
+    'gpt-4.5-preview',
     'gpt-4-turbo',
     'gpt-3.5-turbo',
   ],
   claude: [
+    'claude-3-7-sonnet-20250219',
     'claude-3-5-sonnet-20241022',
     'claude-3-5-haiku-20241022',
     'claude-3-opus-20240229',
@@ -21,6 +24,7 @@ export const AI_MODELS: Record<AIProvider, string[]> = {
     'mistral',
     'qwen2.5',
     'gemma2',
+    'deepseek-r1',
   ],
   custom: [],
 };
