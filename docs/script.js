@@ -1,130 +1,255 @@
-const i18n = {
-    "zh": {
-        "hero.title": "AI 驱动的浏览器书签管理器",
-        "hero.subtitle": "让 AI 帮你整理杂乱的书签，自动分类、智能归档、一键管理",
-        "hero.install": "⬇️ 安装到 Chrome",
-        "hero.source": "查看源码",
-        "features.title": "功能亮点",
-        "features.ai.title": "AI 智能分类",
-        "features.ai.desc": "支持 OpenAI / Claude / Ollama / 自定义 API，AI 分析书签内容并自动建议分类方案。",
-        "features.plan.title": "分类规划",
-        "features.plan.desc": "AI 先生成目录结构方案，你确认后再执行，全程可控，拒绝混乱。",
-        "features.auto.title": "新书签自动归类",
-        "features.auto.desc": "每次收藏新书签时实时分析，页面内 Toast 通知提示归类建议。",
-        "features.rules.title": "自定义规则",
-        "features.rules.desc": "支持域名匹配、通配符、正则表达式，规则优先于 AI，精准控制。",
-        "features.sort.title": "拖放排序",
-        "features.sort.desc": "拖动书签和文件夹调整顺序，拖入文件夹快速移动，操作流畅。",
-        "features.backup.title": "备份与恢复",
-        "features.backup.desc": "整理前自动备份，支持导入/导出 JSON，随时一键回滚，安全无忧。",
-        "features.i18n.title": "中英双语",
-        "features.i18n.desc": "界面完整支持中文和 English，无缝切换。",
-        "features.privacy.title": "隐私安全",
-        "features.privacy.desc": "用户自持 API Key，数据本地化处理，开源代码透明可查。",
-        "workflow.title": "三步整理流程",
-        "workflow.step1.title": "选择范围",
-        "workflow.step1.desc": "选择整理全部书签或仅整理未分类书签。",
-        "workflow.step2.title": "AI 生成方案",
-        "workflow.step2.desc": "AI 分析并生成建议的目录结构，你可以修改或重新生成。",
-        "workflow.step3.title": "预览确认",
-        "workflow.step3.desc": "预览每条移动建议，确认无误后执行整理。",
-        "ai.title": "支持的 AI 服务",
-        "ai.openai": "推荐使用，性价比高，分类准确。",
-        "ai.claude": "逻辑推理能力强，适合复杂分类。",
-        "ai.ollama": "本地运行，完全免费，保护隐私。",
-        "ai.custom": "支持任意兼容 OpenAI 接口的服务。",
-        "footer.privacy": "隐私政策"
+// 中英文翻译数据
+const translations = {
+    zh: {
+        nav_github: 'GitHub',
+        hero_title: 'AI 驱动的浏览器书签管理器',
+        hero_subtitle: '让 AI 帮你整理杂乱的书签，自动分类、智能归档、一键管理',
+        btn_install: 'Chrome 安装 (即将上线)',
+        btn_github: 'GitHub 源码',
+        
+        features_title: '功能亮点',
+        feat_ai_title: '智能分类',
+        feat_ai_desc: '基于大语言模型，自动分析网页内容并归类到合适的文件夹。',
+        feat_auto_title: '自动归档',
+        feat_auto_desc: '添加新书签时自动触发分类，无需手动整理。',
+        feat_rules_title: '自定义规则',
+        feat_rules_desc: '支持正则匹配和域名规则，规则优先，AI 兜底。',
+        feat_search_title: '全局搜索',
+        feat_search_desc: '快速检索所有书签，支持拼音和模糊搜索。',
+        feat_batch_title: '批量管理',
+        feat_batch_desc: '一键整理整个文件夹或所有未分类书签。',
+        feat_models_title: '多模型支持',
+        feat_models_desc: '内置支持 OpenAI、Claude、Ollama 及自定义 API。',
+        feat_privacy_title: '隐私安全',
+        feat_privacy_desc: 'API Key 本地存储，数据不经过第三方服务器。',
+        
+        workflow_title: '工作流程',
+        step1_title: '选择范围',
+        step1_desc: '选择需要整理的书签或文件夹',
+        step2_title: 'AI 生成方案',
+        step2_desc: 'AI 分析并生成分类建议',
+        step3_title: '预览确认',
+        step3_desc: '检查无误后一键应用更改',
+        
+        auto_title: '无感自动归类',
+        auto_desc: '开启自动分类后，每次添加新书签都会在后台静默处理。',
+        auto_feat1_title: '规则优先：',
+        auto_feat1_desc: '优先匹配自定义规则，匹配失败再调用 AI。',
+        auto_feat2_title: '两种模式：',
+        auto_feat2_desc: '支持「直接移动」和「仅建议」模式。',
+        auto_feat3_title: '即时通知：',
+        auto_feat3_desc: '分类完成后通过 Toast 弹窗通知结果。',
+        toast_title: '书签已分类',
+        toast_message: '"GitHub - AIBookMarks" 已移动至 "开发工具"',
+        
+        ai_title: '支持的 AI 服务',
+        ai_openai_model: '推荐：gpt-4o-mini',
+        ai_openai_desc: '速度快，分类准确率高，适合日常使用。',
+        ai_claude_model: '推荐：claude-3-haiku',
+        ai_claude_desc: '理解能力强，适合复杂网页的分类。',
+        ai_ollama_model: '推荐：qwen2.5',
+        ai_ollama_desc: '本地部署，完全免费，极致隐私保护。',
+        ai_custom_title: '自定义 API',
+        ai_custom_model: '兼容 OpenAI 格式',
+        ai_custom_desc: '支持 DeepSeek、通义千问等第三方兼容接口。',
+        
+        privacy_title: '隐私与安全',
+        privacy_key_title: '自持 API Key',
+        privacy_key_desc: '我们不提供也不收集 API Key，所有调用均在本地直接请求服务商。',
+        privacy_data_title: '数据本地化',
+        privacy_data_desc: '书签数据仅保存在您的浏览器中，绝不上传至任何第三方服务器。',
+        privacy_open_title: '开源透明',
+        privacy_open_desc: '代码完全开源，接受社区监督，安全可靠。',
+        
+        footer_privacy: '隐私政策'
     },
-    "en": {
-        "hero.title": "AI-Powered Bookmark Manager",
-        "hero.subtitle": "Let AI organize your messy bookmarks. Auto-categorize, smart filing, one-click management.",
-        "hero.install": "⬇️ Add to Chrome",
-        "hero.source": "View Source",
-        "features.title": "Key Features",
-        "features.ai.title": "AI Categorization",
-        "features.ai.desc": "Supports OpenAI / Claude / Ollama / Custom API. AI analyzes content and suggests categories.",
-        "features.plan.title": "Category Planning",
-        "features.plan.desc": "AI generates a folder structure plan first. You confirm before execution. Full control.",
-        "features.auto.title": "Auto-File New Bookmarks",
-        "features.auto.desc": "Real-time analysis when you add a bookmark. In-page Toast notification for suggestions.",
-        "features.rules.title": "Custom Rules",
-        "features.rules.desc": "Domain matching, wildcards, regex. Rules take precedence over AI for precise control.",
-        "features.sort.title": "Drag & Drop Sort",
-        "features.sort.desc": "Drag to reorder bookmarks and folders. Drop into folders to move quickly.",
-        "features.backup.title": "Backup & Restore",
-        "features.backup.desc": "Auto-backup before organizing. Import/Export JSON. One-click rollback anytime.",
-        "features.i18n.title": "Bilingual Support",
-        "features.i18n.desc": "Full interface support for Chinese and English. Seamless switching.",
-        "features.privacy.title": "Privacy & Security",
-        "features.privacy.desc": "Bring your own API Key. Data processed locally. Open source and transparent.",
-        "workflow.title": "3-Step Workflow",
-        "workflow.step1.title": "Select Scope",
-        "workflow.step1.desc": "Choose to organize all bookmarks or just unclassified ones.",
-        "workflow.step2.title": "AI Generate Plan",
-        "workflow.step2.desc": "AI analyzes and suggests a folder structure. Modify or regenerate as needed.",
-        "workflow.step3.title": "Preview & Confirm",
-        "workflow.step3.desc": "Preview every move suggestion. Confirm before executing the organization.",
-        "ai.title": "Supported AI Services",
-        "ai.openai": "Recommended. High performance and cost-effective.",
-        "ai.claude": "Strong reasoning capabilities. Great for complex categorization.",
-        "ai.ollama": "Run locally. Completely free. Privacy focused.",
-        "ai.custom": "Supports any OpenAI-compatible API service.",
-        "footer.privacy": "Privacy Policy"
+    en: {
+        nav_github: 'GitHub',
+        hero_title: 'AI-Powered Bookmark Manager',
+        hero_subtitle: 'Let AI organize your messy bookmarks. Auto-categorize, smart filing, one-click management.',
+        btn_install: 'Install for Chrome (Coming Soon)',
+        btn_github: 'View on GitHub',
+        
+        features_title: 'Key Features',
+        feat_ai_title: 'Smart Categorization',
+        feat_ai_desc: 'Leverages Large Language Models to analyze webpage content and categorize into appropriate folders.',
+        feat_auto_title: 'Auto-Filing',
+        feat_auto_desc: 'Automatically triggers classification when adding new bookmarks, no manual sorting needed.',
+        feat_rules_title: 'Custom Rules',
+        feat_rules_desc: 'Supports regex and domain matching rules, with rules taking priority over AI.',
+        feat_search_title: 'Global Search',
+        feat_search_desc: 'Quickly search all bookmarks with pinyin and fuzzy search support.',
+        feat_batch_title: 'Batch Management',
+        feat_batch_desc: 'Organize entire folders or all uncategorized bookmarks with one click.',
+        feat_models_title: 'Multi-Model Support',
+        feat_models_desc: 'Built-in support for OpenAI, Claude, Ollama, and custom APIs.',
+        feat_privacy_title: 'Privacy & Security',
+        feat_privacy_desc: 'API Keys stored locally, data never goes through third-party servers.',
+        
+        workflow_title: 'Workflow',
+        step1_title: 'Select Scope',
+        step1_desc: 'Choose bookmarks or folders to organize',
+        step2_title: 'AI Generate Plan',
+        step2_desc: 'AI analyzes and suggests categories',
+        step3_title: 'Preview & Confirm',
+        step3_desc: 'Review and apply changes with one click',
+        
+        auto_title: 'Seamless Auto-Classification',
+        auto_desc: 'Once enabled, every new bookmark is automatically processed in the background.',
+        auto_feat1_title: 'Rules First:',
+        auto_feat1_desc: 'Custom rules are matched first, AI kicks in on mismatch.',
+        auto_feat2_title: 'Two Modes:',
+        auto_feat2_desc: 'Supports "Direct Move" and "Suggest Only" modes.',
+        auto_feat3_title: 'Instant Notification:',
+        auto_feat3_desc: 'Shows toast notification when classification completes.',
+        toast_title: 'Bookmark Classified',
+        toast_message: '"GitHub - AIBookMarks" moved to "Dev Tools"',
+        
+        ai_title: 'Supported AI Services',
+        ai_openai_model: 'Recommended: gpt-4o-mini',
+        ai_openai_desc: 'Fast and accurate, perfect for daily use.',
+        ai_claude_model: 'Recommended: claude-3-haiku',
+        ai_claude_desc: 'Strong comprehension, great for complex categorization.',
+        ai_ollama_model: 'Recommended: qwen2.5',
+        ai_ollama_desc: 'Local deployment, completely free, maximum privacy.',
+        ai_custom_title: 'Custom API',
+        ai_custom_model: 'OpenAI-compatible',
+        ai_custom_desc: 'Supports DeepSeek, Qwen, and other compatible services.',
+        
+        privacy_title: 'Privacy & Security',
+        privacy_key_title: 'Bring Your Own Key',
+        privacy_key_desc: 'We do not provide or collect API Keys. All requests go directly to the service provider.',
+        privacy_data_title: 'Local Data',
+        privacy_data_desc: 'Bookmark data is only stored in your browser, never uploaded to any third-party server.',
+        privacy_open_title: 'Open Source',
+        privacy_open_desc: 'Fully open-source code, community-audited for security and reliability.',
+        
+        footer_privacy: 'Privacy Policy'
     }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    const langToggle = document.getElementById('lang-toggle');
-    let currentLang = localStorage.getItem('lang') || 'zh';
+// 当前语言
+let currentLang = localStorage.getItem('aibookmarks_lang') || 'zh';
 
-    function updateContent() {
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (i18n[currentLang][key]) {
-                el.innerText = i18n[currentLang][key];
-            }
-        });
-        langToggle.innerText = currentLang === 'zh' ? 'EN' : '中文';
-        document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
-    }
+// DOM 加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    initLanguage();
+    initScrollAnimations();
+    initMobileMenu();
+});
 
-    langToggle.addEventListener('click', () => {
+// 初始化语言
+function initLanguage() {
+    const langBtn = document.getElementById('lang-switch');
+    
+    // 更新按钮文本
+    updateLangButton();
+    
+    // 应用翻译
+    applyTranslations();
+    
+    // 监听语言切换
+    langBtn.addEventListener('click', function() {
         currentLang = currentLang === 'zh' ? 'en' : 'zh';
-        localStorage.setItem('lang', currentLang);
-        updateContent();
+        localStorage.setItem('aibookmarks_lang', currentLang);
+        updateLangButton();
+        applyTranslations();
     });
+}
 
-    // Initial load
-    updateContent();
+// 更新语言切换按钮
+function updateLangButton() {
+    const langBtn = document.getElementById('lang-switch');
+    langBtn.textContent = currentLang === 'zh' ? 'EN' : '中文';
+    document.documentElement.setAttribute('lang', currentLang === 'zh' ? 'zh' : 'en');
+}
 
-    // Intersection Observer for fade-in animations
-    const observer = new IntersectionObserver((entries) => {
+// 应用翻译
+function applyTranslations() {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[currentLang][key]) {
+            // 如果元素内部有子元素（如 span），只替换文本节点
+            if (element.children.length > 0) {
+                // 找到文本节点并替换
+                Array.from(element.childNodes).forEach(node => {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        node.textContent = translations[currentLang][key];
+                    }
+                });
+            } else {
+                element.textContent = translations[currentLang][key];
+            }
+        }
+    });
+}
+
+// 初始化滚动动画
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
+                // 可选：观察一次后取消观察以提高性能
+                // observer.unobserve(entry.target);
             }
         });
-    }, {
-        threshold: 0.1
-    });
+    }, observerOptions);
 
-    document.querySelectorAll('.feature-card, .ai-card, .step').forEach(el => {
-        observer.observe(el);
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    // 观察所有需要动画的元素
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach(element => {
+        observer.observe(element);
     });
+}
 
-    // Add visible class styles dynamically or rely on inline styles being overridden?
-    // Let's add a style block for the visible class logic if not present in CSS
-    // Or just inline the logic here:
-    const style = document.createElement('style');
-    style.innerHTML = `
-        .visible {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-    `;
-    document.head.appendChild(style);
+// 移动端菜单（如果需要的话）
+function initMobileMenu() {
+    // 平滑滚动到锚点
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#') {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
+}
+
+// 添加页面加载完成后的淡入效果
+window.addEventListener('load', function() {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.3s ease-in';
+    
+    requestAnimationFrame(function() {
+        document.body.style.opacity = '1';
+    });
 });
+
+// 导出功能供外部使用
+window.AIBookMarks = {
+    setLanguage: function(lang) {
+        if (lang === 'zh' || lang === 'en') {
+            currentLang = lang;
+            localStorage.setItem('aibookmarks_lang', currentLang);
+            updateLangButton();
+            applyTranslations();
+        }
+    },
+    getCurrentLanguage: function() {
+        return currentLang;
+    }
+};

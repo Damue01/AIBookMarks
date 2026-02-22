@@ -1,161 +1,214 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIBookMarks - AI 驱动的浏览器书签管理器</title>
-    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <meta name="description" content="AI 驱动的浏览器书签管理器，让 AI 帮你整理杂乱的书签，自动分类、智能归档、一键管理">
     <link rel="stylesheet" href="style.css">
-    <meta name="description" content="AIBookMarks 让 AI 帮你整理杂乱的书签，自动分类、智能归档、一键管理。支持 Chrome, Firefox, Edge。">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
 </head>
 <body>
+    <!-- 导航栏 -->
     <nav class="navbar">
-        <div class="container nav-content">
-            <div class="logo">
-                <img src="icon.svg" alt="AIBookMarks Logo" width="32" height="32">
-                <span class="logo-text">AIBookMarks</span>
+        <div class="nav-container">
+            <div class="logo-section">
+                <img src="icon.svg" alt="AIBookMarks Logo" class="nav-logo">
+                <span class="nav-title">AIBookMarks</span>
             </div>
-            <div class="nav-links">
-                <button id="lang-toggle" class="btn-ghost" aria-label="Switch Language">EN</button>
-                <a href="https://github.com/Damue01/AIBookMarks" target="_blank" class="btn-github" aria-label="GitHub Repository">
-                    <svg height="24" viewBox="0 0 16 16" version="1.1" width="24" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+            <div class="nav-actions">
+                <button id="lang-switch" class="lang-btn">EN</button>
+                <a href="https://github.com/Damue01/AIBookMarks" target="_blank" class="github-link">
+                    <svg height="20" viewBox="0 0 16 16" width="20" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                    </svg>
+                    <span data-i18n="nav_github">GitHub</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="container hero-content">
-            <div class="hero-logo">
-                <img src="icon.svg" alt="AIBookMarks Logo" width="120" height="120">
-            </div>
-            <h1 class="hero-title" data-i18n="hero.title">AI 驱动的浏览器书签管理器</h1>
-            <p class="hero-subtitle" data-i18n="hero.subtitle">让 AI 帮你整理杂乱的书签，自动分类、智能归档、一键管理</p>
-            <div class="hero-actions">
-                <a href="#" class="btn-primary" data-i18n="hero.install">
-                    <span class="btn-icon">⬇️</span> 安装到 Chrome
+    <main>
+        <!-- Hero 区域 -->
+        <section class="hero">
+            <img src="icon.svg" alt="AIBookMarks Logo" class="hero-logo">
+            <h1 class="hero-title" data-i18n="hero_title">AI 驱动的浏览器书签管理器</h1>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">让 AI 帮你整理杂乱的书签，自动分类、智能归档、一键管理</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary" data-i18n="btn_install">
+                    <span>Chrome 安装 (即将上线)</span>
                 </a>
-                <a href="https://github.com/Damue01/AIBookMarks" target="_blank" class="btn-secondary" data-i18n="hero.source">
-                    查看源码
+                <a href="https://github.com/Damue01/AIBookMarks" target="_blank" class="btn btn-secondary" data-i18n="btn_github">
+                    <span>GitHub 源码</span>
                 </a>
             </div>
-            <div class="browser-support">
-                <span class="badge" title="Chrome"><img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/70.0.0/chrome/chrome_16x16.png" alt="Chrome"> Chrome</span>
-                <span class="badge" title="Firefox"><img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/70.0.0/firefox/firefox_16x16.png" alt="Firefox"> Firefox</span>
-                <span class="badge" title="Edge"><img src="https://cdnjs.cloudflare.com/ajax/libs/browser-logos/70.0.0/edge/edge_16x16.png" alt="Edge"> Edge</span>
+            <div class="browser-badges">
+                <div class="badge">Chrome</div>
+                <div class="badge">Firefox</div>
+                <div class="badge">Edge</div>
             </div>
-        </div>
-    </header>
+        </section>
 
-    <section id="features" class="features section">
-        <div class="container">
-            <h2 class="section-title" data-i18n="features.title">功能亮点</h2>
+        <!-- 功能亮点 -->
+        <section class="features">
+            <h2 class="section-title" data-i18n="features_title">功能亮点</h2>
             <div class="features-grid">
-                <div class="feature-card">
+                <div class="feature-card animate-on-scroll">
                     <div class="feature-icon">🤖</div>
-                    <h3 data-i18n="features.ai.title">AI 智能分类</h3>
-                    <p data-i18n="features.ai.desc">支持 OpenAI / Claude / Ollama / 自定义 API，AI 分析书签内容并自动建议分类方案。</p>
+                    <h3 data-i18n="feat_ai_title">智能分类</h3>
+                    <p data-i18n="feat_ai_desc">基于大语言模型，自动分析网页内容并归类到合适的文件夹。</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📂</div>
-                    <h3 data-i18n="features.plan.title">分类规划</h3>
-                    <p data-i18n="features.plan.desc">AI 先生成目录结构方案，你确认后再执行，全程可控，拒绝混乱。</p>
-                </div>
-                <div class="feature-card">
+                <div class="feature-card animate-on-scroll">
                     <div class="feature-icon">⚡</div>
-                    <h3 data-i18n="features.auto.title">新书签自动归类</h3>
-                    <p data-i18n="features.auto.desc">每次收藏新书签时实时分析，页面内 Toast 通知提示归类建议。</p>
+                    <h3 data-i18n="feat_auto_title">自动归档</h3>
+                    <p data-i18n="feat_auto_desc">添加新书签时自动触发分类，无需手动整理。</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📏</div>
-                    <h3 data-i18n="features.rules.title">自定义规则</h3>
-                    <p data-i18n="features.rules.desc">支持域名匹配、通配符、正则表达式，规则优先于 AI，精准控制。</p>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">📋</div>
+                    <h3 data-i18n="feat_rules_title">自定义规则</h3>
+                    <p data-i18n="feat_rules_desc">支持正则匹配和域名规则，规则优先，AI 兜底。</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <h3 data-i18n="features.sort.title">拖放排序</h3>
-                    <p data-i18n="features.sort.desc">拖动书签和文件夹调整顺序，拖入文件夹快速移动，操作流畅。</p>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">🔍</div>
+                    <h3 data-i18n="feat_search_title">全局搜索</h3>
+                    <p data-i18n="feat_search_desc">快速检索所有书签，支持拼音和模糊搜索。</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💾</div>
-                    <h3 data-i18n="features.backup.title">备份与恢复</h3>
-                    <p data-i18n="features.backup.desc">整理前自动备份，支持导入/导出 JSON，随时一键回滚，安全无忧。</p>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">📦</div>
+                    <h3 data-i18n="feat_batch_title">批量管理</h3>
+                    <p data-i18n="feat_batch_desc">一键整理整个文件夹或所有未分类书签。</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3 data-i18n="features.i18n.title">中英双语</h3>
-                    <p data-i18n="features.i18n.desc">界面完整支持中文和 English，无缝切换。</p>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">🔧</div>
+                    <h3 data-i18n="feat_models_title">多模型支持</h3>
+                    <p data-i18n="feat_models_desc">内置支持 OpenAI、Claude、Ollama 及自定义 API。</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card animate-on-scroll">
                     <div class="feature-icon">🔒</div>
-                    <h3 data-i18n="features.privacy.title">隐私安全</h3>
-                    <p data-i18n="features.privacy.desc">用户自持 API Key，数据本地化处理，开源代码透明可查。</p>
+                    <h3 data-i18n="feat_privacy_title">隐私安全</h3>
+                    <p data-i18n="feat_privacy_desc">API Key 本地存储，数据不经过第三方服务器。</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="workflow" class="workflow section">
-        <div class="container">
-            <h2 class="section-title" data-i18n="workflow.title">三步整理流程</h2>
-            <div class="workflow-steps">
-                <div class="step">
+        <!-- 工作流程 -->
+        <section class="workflow">
+            <h2 class="section-title" data-i18n="workflow_title">工作流程</h2>
+            <div class="workflow-container">
+                <div class="workflow-step animate-on-scroll">
                     <div class="step-number">1</div>
-                    <h3 data-i18n="workflow.step1.title">选择范围</h3>
-                    <p data-i18n="workflow.step1.desc">选择整理全部书签或仅整理未分类书签。</p>
+                    <h3 data-i18n="step1_title">选择范围</h3>
+                    <p data-i18n="step1_desc">选择需要整理的书签或文件夹</p>
                 </div>
-                <div class="step-connector">→</div>
-                <div class="step">
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step animate-on-scroll">
                     <div class="step-number">2</div>
-                    <h3 data-i18n="workflow.step2.title">AI 生成方案</h3>
-                    <p data-i18n="workflow.step2.desc">AI 分析并生成建议的目录结构，你可以修改或重新生成。</p>
+                    <h3 data-i18n="step2_title">AI 生成方案</h3>
+                    <p data-i18n="step2_desc">AI 分析并生成分类建议</p>
                 </div>
-                <div class="step-connector">→</div>
-                <div class="step">
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step animate-on-scroll">
                     <div class="step-number">3</div>
-                    <h3 data-i18n="workflow.step3.title">预览确认</h3>
-                    <p data-i18n="workflow.step3.desc">预览每条移动建议，确认无误后执行整理。</p>
+                    <h3 data-i18n="step3_title">预览确认</h3>
+                    <p data-i18n="step3_desc">检查无误后一键应用更改</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="ai-services" class="ai-services section">
-        <div class="container">
-            <h2 class="section-title" data-i18n="ai.title">支持的 AI 服务</h2>
+        <!-- 自动归类 -->
+        <section class="auto-classify">
+            <div class="auto-classify-container">
+                <div class="auto-classify-text">
+                    <h2 data-i18n="auto_title">无感自动归类</h2>
+                    <p data-i18n="auto_desc">开启自动分类后，每次添加新书签都会在后台静默处理。</p>
+                    <ul class="auto-features">
+                        <li>
+                            <strong data-i18n="auto_feat1_title">规则优先：</strong>
+                            <span data-i18n="auto_feat1_desc">优先匹配自定义规则，匹配失败再调用 AI。</span>
+                        </li>
+                        <li>
+                            <strong data-i18n="auto_feat2_title">两种模式：</strong>
+                            <span data-i18n="auto_feat2_desc">支持「直接移动」和「仅建议」模式。</span>
+                        </li>
+                        <li>
+                            <strong data-i18n="auto_feat3_title">即时通知：</strong>
+                            <span data-i18n="auto_feat3_desc">分类完成后通过 Toast 弹窗通知结果。</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="auto-classify-visual animate-on-scroll">
+                    <div class="toast-demo">
+                        <div class="toast-icon">✨</div>
+                        <div class="toast-content">
+                            <div class="toast-title" data-i18n="toast_title">书签已分类</div>
+                            <div class="toast-message" data-i18n="toast_message">"GitHub - AIBookMarks" 已移动至 "开发工具"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI 服务 -->
+        <section class="ai-services">
+            <h2 class="section-title" data-i18n="ai_title">支持的 AI 服务</h2>
             <div class="ai-grid">
-                <div class="ai-card">
+                <div class="ai-card animate-on-scroll">
                     <h3>OpenAI</h3>
-                    <p class="ai-model">GPT-4o / GPT-4o-mini</p>
-                    <p class="ai-desc" data-i18n="ai.openai">推荐使用，性价比高，分类准确。</p>
+                    <p class="ai-model" data-i18n="ai_openai_model">推荐：gpt-4o-mini</p>
+                    <p class="ai-desc" data-i18n="ai_openai_desc">速度快，分类准确率高，适合日常使用。</p>
                 </div>
-                <div class="ai-card">
+                <div class="ai-card animate-on-scroll">
                     <h3>Claude</h3>
-                    <p class="ai-model">Claude 3.5 Sonnet / Haiku</p>
-                    <p class="ai-desc" data-i18n="ai.claude">逻辑推理能力强，适合复杂分类。</p>
+                    <p class="ai-model" data-i18n="ai_claude_model">推荐：claude-3-haiku</p>
+                    <p class="ai-desc" data-i18n="ai_claude_desc">理解能力强，适合复杂网页的分类。</p>
                 </div>
-                <div class="ai-card">
+                <div class="ai-card animate-on-scroll">
                     <h3>Ollama</h3>
-                    <p class="ai-model">Llama 3 / Qwen 2.5</p>
-                    <p class="ai-desc" data-i18n="ai.ollama">本地运行，完全免费，保护隐私。</p>
+                    <p class="ai-model" data-i18n="ai_ollama_model">推荐：qwen2.5</p>
+                    <p class="ai-desc" data-i18n="ai_ollama_desc">本地部署，完全免费，极致隐私保护。</p>
                 </div>
-                <div class="ai-card">
-                    <h3>Custom</h3>
-                    <p class="ai-model">Any OpenAI Compatible</p>
-                    <p class="ai-desc" data-i18n="ai.custom">支持任意兼容 OpenAI 接口的服务。</p>
+                <div class="ai-card animate-on-scroll">
+                    <h3 data-i18n="ai_custom_title">自定义 API</h3>
+                    <p class="ai-model" data-i18n="ai_custom_model">兼容 OpenAI 格式</p>
+                    <p class="ai-desc" data-i18n="ai_custom_desc">支持 DeepSeek、通义千问等第三方兼容接口。</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
+        <!-- 隐私安全 -->
+        <section class="privacy">
+            <h2 class="section-title" data-i18n="privacy_title">隐私与安全</h2>
+            <div class="privacy-grid">
+                <div class="privacy-card animate-on-scroll">
+                    <div class="privacy-icon">🔑</div>
+                    <h3 data-i18n="privacy_key_title">自持 API Key</h3>
+                    <p data-i18n="privacy_key_desc">我们不提供也不收集 API Key，所有调用均在本地直接请求服务商。</p>
+                </div>
+                <div class="privacy-card animate-on-scroll">
+                    <div class="privacy-icon">💾</div>
+                    <h3 data-i18n="privacy_data_title">数据本地化</h3>
+                    <p data-i18n="privacy_data_desc">书签数据仅保存在您的浏览器中，绝不上传至任何第三方服务器。</p>
+                </div>
+                <div class="privacy-card animate-on-scroll">
+                    <div class="privacy-icon">📖</div>
+                    <h3 data-i18n="privacy_open_title">开源透明</h3>
+                    <p data-i18n="privacy_open_desc">代码完全开源，接受社区监督，安全可靠。</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
     <footer class="footer">
-        <div class="container footer-content">
+        <div class="footer-container">
             <div class="footer-links">
                 <a href="https://github.com/Damue01/AIBookMarks" target="_blank">GitHub</a>
-                <a href="https://github.com/Damue01/AIBookMarks/blob/main/LICENSE" target="_blank">License</a>
-                <a href="#" data-i18n="footer.privacy">Privacy Policy</a>
+                <span class="footer-separator">•</span>
+                <a href="https://github.com/Damue01/AIBookMarks/blob/main/LICENSE" target="_blank">MIT License</a>
+                <span class="footer-separator">•</span>
+                <a href="https://github.com/Damue01/AIBookMarks/blob/main/PRIVACY.md" target="_blank" data-i18n="footer_privacy">隐私政策</a>
             </div>
-            <p class="copyright">© 2024 AIBookMarks. All rights reserved.</p>
+            <p class="footer-copyright">© 2024 AIBookMarks. All rights reserved.</p>
         </div>
     </footer>
 
