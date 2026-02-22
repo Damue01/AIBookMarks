@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '@/stores/settings';
 import { createAIService } from '@/services/ai';
-import { AI_MODELS, AI_BASE_URLS, DEFAULT_PROVIDER_CONFIGS } from '@/shared/constants';
+import { AI_MODEL_SUGGESTIONS, AI_BASE_URLS, DEFAULT_PROVIDER_CONFIGS } from '@/shared/constants';
 import type { AIProvider, AIProviderConfig } from '@/shared/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +37,11 @@ export default function AIConfigPage() {
   const [testResult, setTestResult] = useState<{ ok: boolean; msg: string } | null>(null);
   const [testing, setTesting] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [fetchedModels, setFetchedModels] = useState<string[]>([]);
+  const [fetchingModels, setFetchingModels] = useState(false);
+  const [modelDropdownOpen, setModelDropdownOpen] = useState(false);
+  const [modelFilter, setModelFilter] = useState('');
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Current provider's config
   const currentConfig = configs[activeProvider];
@@ -54,9 +59,54 @@ export default function AIConfigPage() {
     }));
   };
 
+  const fetchAvailableModels = async (provider?: AIProvider, cfg?: AIProviderConfig) => {
+    const p = provider ?? activeProvider;
+    const c = cfg ?? currentConfig;
+    setFetchingModels(true);
+    try {
+      if (p === 'ollama') {
+        const root = (c.baseUrl || 'http://localhost:11434')
+          .replace(/\/v1\/?$/, '').replace(/\/$/, '');
+        const res = await fetch(`${root}/api/tags`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json() as { models: { name: string }[] };
+        setFetchedModels(data.models.map((m) => m.name));
+      } else if (p === 'openai' || p === 'custom') {
+        const base = (c.baseUrl || 'https://api.openai.com/v1').replace(/\/$/, '');
+        const res = await fetch(`${base}/models`, {
+          headers: { Authorization: `Bearer ${c.apiKey || ''}` },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json() as { data: { id: string }[] };
+        const ids = data.data
+          .map((m) => m.id)
+          .filter((id) => /gpt|claude|llama|mistral|qwen|gemma|deepseek/i.test(id))
+          .sort();
+        setFetchedModels(ids);
+      } else if (p === 'claude') {
+        const base = (c.baseUrl || 'https://api.anthropic.com').replace(/\/$/, '');
+        const res = await fetch(`${base}/v1/models`, {
+          headers: {
+            'x-api-key': c.apiKey || '',
+            'anthropic-version': '2023-06-01',
+          },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json() as { data: { id: string }[] };
+        setFetchedModels(data.data.map((m) => m.id).sort());
+      }
+    } catch {
+      setFetchedModels([]);
+    } finally {
+      setFetchingModels(false);
+    }
+  };
+
   const handleProviderChange = (p: AIProvider) => {
     setActiveProvider(p);
     setTestResult(null);
+    setFetchedModels([]);
+    if (p === 'ollama') fetchAvailableModels(p, configs[p]);
   };
 
   const handleTest = async () => {
@@ -82,7 +132,23 @@ export default function AIConfigPage() {
     setSaving(false);
   };
 
-  const knownModels = AI_MODELS[activeProvider];
+  const modelSuggestions =
+    fetchedModels.length > 0 ? fetchedModels : AI_MODEL_SUGGESTIONS[activeProvider];
+
+  const filteredModels = modelFilter
+    ? modelSuggestions.filter((m) => m.toLowerCase().includes(modelFilter.toLowerCase()))
+    : modelSuggestions;
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setModelDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -137,26 +203,68 @@ export default function AIConfigPage() {
 
           {/* Model */}
           <div className="space-y-1">
-            <Label htmlFor="model">{t('settings.ai.model')}</Label>
-            {knownModels.length > 0 ? (
-              <select
-                id="model"
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                value={currentConfig.model}
-                onChange={(e) => updateCurrentConfig({ model: e.target.value })}
+            <div className="flex items-center justify-between">
+              <Label htmlFor="model">{t('settings.ai.model')}</Label>
+              <button
+                type="button"
+                onClick={() => fetchAvailableModels()}
+                disabled={fetchingModels || (activeProvider !== 'ollama' && !currentConfig.apiKey)}
+                className="text-xs text-primary hover:underline disabled:opacity-50"
+                title={activeProvider !== 'ollama' && !currentConfig.apiKey ? '请先填写 API Key' : undefined}
               >
-                {knownModels.map((m) => (
-                  <option key={m} value={m}>{m}</option>
-                ))}
-              </select>
-            ) : (
-              <Input
-                id="model"
-                placeholder={t('settings.ai.modelPlaceholder')}
-                value={currentConfig.model}
-                onChange={(e) => updateCurrentConfig({ model: e.target.value })}
-              />
-            )}
+                {fetchingModels ? '加载中…' : '获取模型列表'}
+              </button>
+            </div>
+            <div className="relative" ref={dropdownRef}>
+              <div className="flex gap-1">
+                <Input
+                  id="model"
+                  placeholder={t('settings.ai.modelPlaceholder')}
+                  value={currentConfig.model}
+                  onChange={(e) => {
+                    updateCurrentConfig({ model: e.target.value });
+                    setModelFilter(e.target.value);
+                    setModelDropdownOpen(true);
+                  }}
+                  onFocus={() => {
+                    setModelFilter('');
+                    setModelDropdownOpen(true);
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModelFilter('');
+                    setModelDropdownOpen(!modelDropdownOpen);
+                  }}
+                  className="flex items-center justify-center w-9 h-9 rounded-md border border-input bg-transparent hover:bg-accent shrink-0"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className={`transition-transform ${modelDropdownOpen ? 'rotate-180' : ''}`}>
+                    <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+              {modelDropdownOpen && filteredModels.length > 0 && (
+                <div className="absolute z-50 mt-1 w-full max-h-48 overflow-y-auto rounded-md border border-input bg-popover shadow-md">
+                  {filteredModels.map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      className={`w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors ${
+                        currentConfig.model === m ? 'bg-primary/10 text-primary font-medium' : ''
+                      }`}
+                      onClick={() => {
+                        updateCurrentConfig({ model: m });
+                        setModelDropdownOpen(false);
+                        setModelFilter('');
+                      }}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Test Connection */}
