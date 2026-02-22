@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.2" />
+    </filter>
+  </defs>
+  
+  <!-- Background rounded square -->
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#bg-gradient)" filter="url(#shadow)" />
+  
+  <!-- Bookmark shape -->
+  <path d="M44 32 C40 32 36 36 36 40 L36 96 C36 100 40 102 44 99 L64 84 L84 99 C88 102 92 100 92 96 L92 40 C92 36 88 32 84 32 Z" fill="#ffffff" />
+  
+  <!-- AI Sparkles -->
+  <path d="M64 44 L66 52 L74 54 L66 56 L64 64 L62 56 L54 54 L62 52 Z" fill="#3b82f6" />
+  <path d="M48 68 L49 72 L53 73 L49 74 L48 78 L47 74 L43 73 L47 72 Z" fill="#60a5fa" />
+  <path d="M80 68 L81 72 L85 73 L81 74 L80 78 L79 74 L75 73 L79 72 Z" fill="#60a5fa" />
+</svg>

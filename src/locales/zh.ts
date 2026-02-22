@@ -1,0 +1,257 @@
+const zh = {
+  // Common
+  common: {
+    save: '保存',
+    cancel: '取消',
+    confirm: '确认',
+    delete: '删除',
+    edit: '编辑',
+    add: '添加',
+    close: '关闭',
+    loading: '加载中...',
+    error: '错误',
+    success: '成功',
+    test: '测试连接',
+    testing: '测试中...',
+    back: '返回',
+    next: '下一步',
+    selectAll: '全选',
+    deselectAll: '取消全选',
+    accepted: '已接受',
+    rejected: '已拒绝',
+    search: '搜索...',
+    noResults: '暂无结果',
+    export: '导出',
+    import: '导入',
+  },
+
+  // Header & Nav
+  app: {
+    name: 'AIBookMarks',
+    settings: '设置',
+  },
+
+  // Tabs
+  tabs: {
+    browse: '浏览',
+    organize: '整理',
+  },
+
+  // Browse page
+  browse: {
+    searchPlaceholder: '搜索书签标题或网址...',
+    searchResults: '找到 {{count}} 个结果',
+    root: '根目录',
+    folders: '文件夹',
+    bookmarks: '书签',
+    emptyFolder: '文件夹为空',
+    recentlyAdded: '最近添加',
+    subfolders: '子文件夹',
+    sort: '排序',
+    sortDefault: '默认顺序',
+    sortNameAsc: '名称 A → Z',
+    sortNameDesc: '名称 Z → A',
+    sortDateNewest: '最新添加',
+    sortDateOldest: '最早添加',
+    sortDomain: '按域名',
+    applySort: '永久应用此排序',
+    sortApplied: '排序已保存',
+    openUrl: '打开链接',
+    copyUrl: '复制链接',
+    editTitle: '编辑标题',
+    renameFolder: '重命名文件夹',
+    deleteBookmark: '删除书签',
+    deleteFolder: '删除文件夹',
+    deleteFolderConfirm: '确认删除文件夹"{{name}}"？此操作将删除文件夹内所有内容且不可撤销。',
+    deleteBookmarkConfirm: '确认删除书签"{{name}}"？',
+    moveToFolder: '移动到文件夹',
+    moveConfirm: '移动',
+    searchFolderPlaceholder: '搜索文件夹...',
+    currentFolder: '当前',
+    editTitlePlaceholder: '书签标题',
+    editUrlPlaceholder: '书签网址',
+    selectMode: '选择',
+    exitSelect: '退出选择',
+    selected: '已选 {{count}} 项',
+    batchDelete: '删除选中',
+    batchMove: '移动到...',
+    batchDeleteConfirm: '确认删除 {{count}} 个书签？',
+    newFolder: '新建文件夹',
+    newFolderName: '文件夹名称',
+    newFolderPlaceholder: '输入文件夹名称',
+    createFolder: '创建',
+    dragHint: '可拖动调整顺序，拖入文件夹可移动',
+  },
+
+  // Overview
+  overview: {
+    title: '书签概览',
+    total: '总计',
+    folders: '文件夹',
+    unclassified: '未分类',
+    bookmarks: '个书签',
+    lastBackup: '上次备份',
+    never: '从未备份',
+  },
+
+  // Organize
+  organize: {
+    title: 'AI 智能整理',
+    description: '让 AI 分析你的书签，自动生成分类方案并整理到合适的文件夹。',
+    startAll: '整理全部书签',
+    startUnclassified: '仅未分类',
+    startFolder: '选择文件夹整理',
+    analyzing: 'AI 分析中',
+    batch: '第 {{current}}/{{total}} 批',
+    processed: '已处理 {{count}} 条',
+    previewTitle: '整理方案预览',
+    totalSuggestions: '共 {{count}} 条建议',
+    acceptedCount: '已接受 {{count}} 条',
+    executeOrganize: '执行整理',
+    executing: '执行中...',
+    done: '整理完成！',
+    aborted: '已中止',
+    confirmExecute: '确认执行 {{count}} 条变更？执行前将自动备份。',
+    noSuggestions: '没有需要调整的书签',
+    stopAnalysis: '停止分析',
+    merged: '合并重复文件夹',
+    cleaned: '清理空文件夹',
+    unclassifiedPreview: '未分类书签预览',
+    more: '更多',
+  },
+
+  // Filter labels
+  filter: {
+    all: '全部',
+    move: '移动',
+    newFolder: '新建文件夹',
+    noChange: '无变化',
+    pending: '待确认',
+  },
+
+  // Suggestion item
+  suggestion: {
+    accept: '接受',
+    reject: '拒绝',
+    modify: '修改目标',
+    newFolderBadge: '新建 🆕',
+    reason: '理由',
+    current: '当前',
+    suggested: '建议',
+    from: '原',
+    to: '至',
+  },
+
+  // Settings page
+  settings: {
+    title: '设置',
+    ai: {
+      title: 'AI 服务配置',
+      provider: 'AI 提供商',
+      apiKey: 'API Key',
+      apiKeyPlaceholder: '输入 API Key',
+      baseUrl: '接口地址 (Base URL)',
+      model: '模型',
+      modelPlaceholder: '输入模型名',
+      testConnection: '测试连接',
+      testSuccess: '连接成功',
+      testFailed: '连接失败',
+      batchSize: '每批分析数量',
+      includeReason: '显示分类理由',
+      tokenEstimate: '预估 Token 消耗',
+    },
+    general: {
+      title: '通用设置',
+      language: '界面语言',
+      zh: '中文',
+      en: 'English',
+    },
+    autoClassify: {
+      title: '新书签自动归类',
+      enable: '开启自动归类',
+      silentMode: '静默模式（直接归类，不弹通知）',
+    },
+    backup: {
+      title: '备份设置',
+      autoBackup: '每次整理前自动备份',
+      maxBackups: '最多保留备份数',
+      manageBackups: '管理备份',
+    },
+  },
+
+  // Rules
+  rules: {
+    title: '自定义规则',
+    addRule: '添加规则',
+    editRule: '编辑规则',
+    noRules: '暂无规则，添加第一条',
+    name: '规则名称',
+    matchType: '匹配方式',
+    domain: '域名匹配',
+    wildcard: '通配符',
+    regex: '正则表达式',
+    pattern: '匹配模式',
+    patternPlaceholderDomain: 'github.com',
+    patternPlaceholderWildcard: '*.github.com',
+    patternPlaceholderRegex: '^https://github\\.com',
+    targetFolder: '目标文件夹',
+    enabled: '启用',
+    priority: '规则顺序决定优先级，排在前面的优先匹配',
+  },
+
+  // Backup manager
+  backup: {
+    title: '备份管理',
+    createManual: '立即备份',
+    restoreConfirm: '确认恢复到此备份？当前书签将被替换。',
+    deleteConfirm: '确认删除此备份？',
+    restore: '恢复',
+    noBackups: '暂无备份',
+    count: '{{bookmarks}} 书签 / {{folders}} 文件夹',
+    restoring: '正在恢复书签...',
+    restoreSuccess: '书签恢复成功！',
+    restoreFailed: '恢复失败',
+    preRestoreLabel: '恢复前自动备份',
+    triggers: {
+      auto: '自动',
+      manual: '手动',
+      'pre-organize': '整理前',
+    },
+  },
+
+  // Auto classify notification
+  autoClassify: {
+    newBookmark: '新书签：{{title}}',
+    suggestion: '建议放入：{{folder}}',
+    accept: '接受',
+    ignore: '忽略',
+    choose: '自选文件夹',
+  },
+
+  // Classify toast (content script)
+  classify: {
+    analyzing: 'AI 分析中...',
+    accept: '接受',
+    ignore: '忽略',
+    suggestion: '建议放入',
+    ruleMatch: '规则匹配',
+    aiSuggestion: 'AI 推荐',
+    moved: '已移动到目标文件夹',
+    error: '分类失败，请检查 AI 配置',
+  },
+
+  // Category Plan
+  categoryPlan: {
+    title: '分类规划',
+    hint: '共 {{count}} 个书签。AI 已生成建议的目录结构，你可以增删改，确认后再开始分类。',
+    generating: 'AI 正在分析书签并生成分类方案...',
+    generateFailed: '生成分类方案失败',
+    regenerate: '重新生成',
+    retry: '重试',
+    addPlaceholder: '添加自定义目录，如“开发/前端”',
+    confirmAndAnalyze: '确认 {{count}} 个分类，开始分析',
+    skipPlan: '跳过，直接分析',
+  },
+} as const;
+
+export default zh;
