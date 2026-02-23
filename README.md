@@ -155,7 +155,7 @@ AI 分析完成后，每条建议展示：
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/AIBookMarks.git
+git clone https://github.com/Damue01/AIBookMarks.git
 cd AIBookMarks
 
 # 安装依赖

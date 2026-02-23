@@ -43,7 +43,7 @@ import CreateFolderDialog from '../components/CreateFolderDialog';
 import MoveToFolderDialog from '../components/MoveToFolderDialog';
 
 /** Root IDs for Chrome's built-in root folders */
-const ROOT_IDS = new Set(['0', '1', '2']);
+const ROOT_IDS = new Set(['0']);
 
 /** Find a node by ID in the tree */
 function findNode(nodes: BookmarkNode[], id: string): BookmarkNode | null {
@@ -129,7 +129,7 @@ export default function BrowsePage() {
 
   // Restore last visited folder on mount
   useEffect(() => {
-    chrome.storage.session.get(BROWSE_FOLDER_KEY).then((result) => {
+    chrome.storage.local.get(BROWSE_FOLDER_KEY).then((result) => {
       const saved = result[BROWSE_FOLDER_KEY];
       if (saved && typeof saved === 'string') {
         setCurrentFolderId(saved);
@@ -142,9 +142,9 @@ export default function BrowsePage() {
   useEffect(() => {
     if (!restored) return;
     if (currentFolderId) {
-      chrome.storage.session.set({ [BROWSE_FOLDER_KEY]: currentFolderId });
+      chrome.storage.local.set({ [BROWSE_FOLDER_KEY]: currentFolderId });
     } else {
-      chrome.storage.session.remove(BROWSE_FOLDER_KEY);
+      chrome.storage.local.remove(BROWSE_FOLDER_KEY);
     }
   }, [currentFolderId, restored]);
 
