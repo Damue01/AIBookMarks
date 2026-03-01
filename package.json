@@ -1,6 +1,6 @@
 {
   "name": "ai-bookmarks",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "AI-powered bookmark organizer for Chrome, Firefox, and Edge",
   "private": true,
   "type": "module",
