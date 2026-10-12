@@ -1,6 +1,7 @@
 const zh = {
   // Common
   common: {
+    more: '更多操作',
     save: '保存',
     cancel: '取消',
     confirm: '确认',
@@ -27,6 +28,7 @@ const zh = {
 
   // Header & Nav
   app: {
+    navigation: '主导航',
     name: 'AIBookMarks',
     settings: '设置',
   },
@@ -41,7 +43,12 @@ const zh = {
   browse: {
     searchPlaceholder: '搜索书签标题或网址...',
     searchResults: '找到 {{count}} 个结果',
-    root: '根目录',
+    root: '全部书签',
+    clearSearch: '清空搜索',
+    dragBookmark: '拖动书签',
+    dragFolder: '拖动文件夹',
+    loadError: '书签加载失败，请重试。',
+    retry: '重试',
     folders: '文件夹',
     bookmarks: '书签',
     emptyFolder: '文件夹为空',

@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { BackupService } from '@/services/backup';
 import { formatDate, isUnclassified, extractDomain } from '@/shared/utils';
 import type { BookmarkFlat } from '@/shared/types';
+import BookmarkIcon from '@/components/BookmarkIcon';
 
 interface OrganizePageProps {
   onStartPlan: (bookmarks: BookmarkFlat[], scope: 'all' | 'unclassified') => void;
@@ -71,7 +72,7 @@ export default function OrganizePage({ onStartPlan }: OrganizePageProps) {
           ].map(({ icon: Icon, label, value, color }) => (
             <div
               key={label}
-              className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/40 border border-border/50"
+              className="flex-1 flex items-center gap-2 px-3 py-2"
             >
               <Icon className={`w-4 h-4 ${color}`} />
               <div>
@@ -117,7 +118,7 @@ export default function OrganizePage({ onStartPlan }: OrganizePageProps) {
         <Button
           className="w-full gap-2"
           onClick={() => handleStartAnalysis('all')}
-          disabled={analyzing || loading}
+          disabled={analyzing || loading || stats.total === 0}
         >
           <FolderOpen className="h-4 w-4" />
           {t('organize.startAll')}
@@ -148,12 +149,7 @@ export default function OrganizePage({ onStartPlan }: OrganizePageProps) {
               const domain = extractDomain(bm.url);
               return (
                 <div key={bm.id} className="flex items-center gap-2 px-2.5 py-1.5 hover:bg-muted/40 transition-colors group">
-                  <img
-                    src={`https://www.google.com/s2/favicons?domain=${domain}&sz=16`}
-                    alt=""
-                    className="w-4 h-4 rounded-sm shrink-0"
-                    onError={(e) => { (e.target as HTMLImageElement).style.visibility = 'hidden'; }}
-                  />
+                  <BookmarkIcon url={bm.url} title={bm.title} className="h-6 w-6" />
                   <div className="min-w-0 flex-1">
                     <div className="text-[11px] font-medium truncate leading-tight" title={bm.title}>
                       {bm.title || domain}

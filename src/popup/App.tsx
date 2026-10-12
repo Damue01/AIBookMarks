@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Compass, Wand2, Settings } from 'lucide-react';
+import { Bookmark, Compass, Wand2, Settings } from 'lucide-react';
 import { useSettingsStore } from '@/stores/settings';
 import { initI18n } from '@/services/i18n';
 import { useBookmarksStore } from '@/stores/bookmarks';
@@ -30,7 +30,6 @@ export default function App() {
   const { settings, loaded, load } = useSettingsStore();
   const fetchAll = useBookmarksStore((s) => s.fetchAll);
   const folders = useBookmarksStore((s) => s.folders);
-  const stats = useBookmarksStore((s) => s.stats);
   const resetOrganize = useOrganizeStore((s) => s.reset);
   const syncFromBackground = useOrganizeStore((s) => s.syncFromBackground);
   const startAnalysis = useOrganizeStore((s) => s.startAnalysis);
@@ -63,8 +62,8 @@ export default function App() {
 
   if (!loaded) {
     return (
-      <div className="w-[560px] h-[500px] flex items-center justify-center">
-        <span className="text-muted-foreground text-sm">Loading...</span>
+      <div className="popup-shell flex items-center justify-center">
+        <span className="text-muted-foreground text-sm">{t('common.loading')}</span>
       </div>
     );
   }
@@ -111,10 +110,13 @@ export default function App() {
   const analyzing = progress.phase === 'analyzing' || progress.phase === 'scanning';
 
   return (
-    <div className="w-[560px] h-[520px] flex flex-col bg-background text-foreground overflow-hidden">
+    <div className="popup-shell flex flex-col bg-background text-foreground overflow-hidden">
       {/* Top Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b bg-background/80 backdrop-blur-sm">
-        <span className="font-semibold text-sm tracking-tight">{t('app.name')}</span>
+      <header className="flex shrink-0 h-14 items-center justify-between px-[18px] bg-background">
+        <div className="flex items-center gap-2.5">
+          <Bookmark className="h-5 w-5 text-primary" strokeWidth={2} />
+          <span className="font-semibold text-base tracking-tight">{t('app.name')}</span>
+        </div>
         <button
           onClick={openSettings}
           className="p-1.5 rounded-lg hover:bg-accent transition-colors"
@@ -122,10 +124,10 @@ export default function App() {
         >
           <Settings className="h-4 w-4 text-muted-foreground" />
         </button>
-      </div>
+      </header>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
+      <main className="flex-1 min-h-0 overflow-hidden">
         {activeTab === 'browse' && <BrowsePage />}
         {activeTab === 'organize' && organizeSubPage === 'main' && (
           <OrganizePage onStartPlan={handleStartPlan} />
@@ -142,41 +144,38 @@ export default function App() {
         {activeTab === 'organize' && organizeSubPage === 'preview' && (
           <PreviewPage onNavigate={(p) => navigateOrganize(p === 'home' ? 'main' : p as OrganizeSubPage)} />
         )}
-      </div>
+      </main>
 
       {/* Bottom Tab Bar */}
-      <div className="flex items-center border-t bg-background/80 backdrop-blur-sm">
+      <nav aria-label={t('app.navigation')} className="flex shrink-0 items-center justify-center gap-20 border-t h-14 bg-background">
         <button
           onClick={() => handleTabChange('browse')}
-          className={`flex-1 flex flex-col items-center gap-0.5 py-2 transition-colors ${
+          aria-current={activeTab === 'browse' ? 'page' : undefined}
+          className={`relative flex flex-col items-center gap-0.5 py-2 px-5 transition-colors after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:rounded-full ${
             activeTab === 'browse'
-              ? 'text-primary'
+              ? 'text-primary after:bg-primary'
               : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <Compass className="w-4.5 h-4.5" />
+          <Compass className="w-[18px] h-[18px]" />
           <span className="text-[11px] font-medium">{t('tabs.browse')}</span>
         </button>
         <button
           onClick={() => handleTabChange('organize')}
-          className={`flex-1 flex flex-col items-center gap-0.5 py-2 transition-colors relative ${
+          aria-current={activeTab === 'organize' ? 'page' : undefined}
+          className={`relative flex flex-col items-center gap-0.5 py-2 px-5 transition-colors after:absolute after:bottom-0 after:left-4 after:right-4 after:h-0.5 after:rounded-full ${
             activeTab === 'organize'
-              ? 'text-primary'
+              ? 'text-primary after:bg-primary'
               : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <Wand2 className="w-4.5 h-4.5" />
+          <Wand2 className="w-[18px] h-[18px]" />
           <span className="text-[11px] font-medium">{t('tabs.organize')}</span>
           {analyzing && (
             <span className="absolute top-1.5 right-[calc(50%-16px)] w-2 h-2 rounded-full bg-primary animate-pulse" />
           )}
-          {!analyzing && stats.unclassified > 0 && (
-            <span className="absolute top-1 right-[calc(50%-20px)] min-w-[16px] h-[14px] flex items-center justify-center rounded-full bg-amber-500 text-white text-[9px] font-bold px-1 leading-none">
-              {stats.unclassified > 99 ? '99+' : stats.unclassified}
-            </span>
-          )}
         </button>
-      </div>
+      </nav>
     </div>
   );
 }

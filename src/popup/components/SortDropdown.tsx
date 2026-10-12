@@ -28,11 +28,12 @@ export default function SortDropdown({ value, onChange, onApplyPermanent }: Sort
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border/50 bg-muted/30 hover:bg-accent text-xs font-medium text-muted-foreground transition-colors"
+          className="flex items-center gap-1.5 h-9 px-2.5 rounded-md border border-border bg-background hover:bg-accent text-xs font-medium text-muted-foreground transition-colors"
           title={t('browse.sort')}
+          aria-label={t('browse.sort')}
         >
           {currentOption.icon}
-          <span className="hidden sm:inline">{currentOption.label}</span>
+          <span className="sr-only">{currentOption.label}</span>
         </button>
       </DropdownMenu.Trigger>
 

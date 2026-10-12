@@ -1,0 +1,10 @@
+body { background: #f5f7fa; min-height: 100vh; padding: 48px 16px; }
+#preview-bar { max-width: 560px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: space-between; color: #737c8b; font-size: 12px; }
+#preview-bar button { border: 0; background: none; color: #57708e; cursor: pointer; padding: 4px; font-size: 12px; }
+#root { width: fit-content; max-width: 100%; margin: auto; border: 1px solid #e4e8ee; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 36px #18253a08; }
+.options-preview #root { width: 100%; max-width: 1040px; }
+.options-preview #preview-bar { max-width: 1040px; }
+@media (max-width: 600px) {
+  body { padding: 20px 10px; }
+  .popup-shell { width: calc(100vw - 22px); max-height: calc(100dvh - 84px); }
+}

@@ -10,10 +10,11 @@ export default defineConfig({
   manifest: {
     name: 'AIBookMarks',
     description: 'AI-powered bookmark organizer',
-    version: '1.0.0',
+    version: '1.1.0',
     permissions: [
       'bookmarks',
       'storage',
+      'favicon',
     ],
     host_permissions: [],
     action: {
@@ -38,6 +39,9 @@ export default defineConfig({
   },
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {
+      if (wxt.config.browser === 'firefox') {
+        manifest.permissions = manifest.permissions?.filter((permission) => permission !== 'favicon');
+      }
       // Force open_in_tab: true — WXT auto-generation strips it
       if (manifest.options_ui) {
         manifest.options_ui.open_in_tab = true;

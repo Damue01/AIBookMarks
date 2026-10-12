@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { Folder, ChevronRight, GripVertical, MoreHorizontal, Pencil, Trash2, Check, X } from 'lucide-react';
+import { Folder, GripVertical, MoreHorizontal, Pencil, Trash2, Check, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { BookmarkNode } from '@/shared/types';
 
@@ -15,57 +15,7 @@ export interface FolderCardProps {
   onDelete?: (id: string) => void;
   /** Set to true when rendering as DragOverlay */
   isOverlay?: boolean;
-}
-
-/** Count bookmarks (urls) directly + recursively inside a folder node */
-function countInside(node: BookmarkNode): { bookmarks: number; folders: number } {
-  let bookmarks = 0;
-  let folders = 0;
-  if (node.children) {
-    for (const c of node.children) {
-      if (c.url) {
-        bookmarks++;
-      } else {
-        folders++;
-        const inner = countInside(c);
-        bookmarks += inner.bookmarks;
-        folders += inner.folders;
-      }
-    }
-  }
-  return { bookmarks, folders };
-}
-
-// Pastel colour palette for folder cards
-const COLORS = [
-  'from-blue-50 to-blue-100/60 border-blue-200/60 text-blue-700',
-  'from-violet-50 to-violet-100/60 border-violet-200/60 text-violet-700',
-  'from-emerald-50 to-emerald-100/60 border-emerald-200/60 text-emerald-700',
-  'from-amber-50 to-amber-100/60 border-amber-200/60 text-amber-700',
-  'from-rose-50 to-rose-100/60 border-rose-200/60 text-rose-700',
-  'from-cyan-50 to-cyan-100/60 border-cyan-200/60 text-cyan-700',
-  'from-orange-50 to-orange-100/60 border-orange-200/60 text-orange-700',
-  'from-indigo-50 to-indigo-100/60 border-indigo-200/60 text-indigo-700',
-];
-
-const ICON_COLORS = [
-  'text-blue-500',
-  'text-violet-500',
-  'text-emerald-500',
-  'text-amber-500',
-  'text-rose-500',
-  'text-cyan-500',
-  'text-orange-500',
-  'text-indigo-500',
-];
-
-function hashString(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return hash;
+  dragDisabled?: boolean;
 }
 
 export default function FolderCard({
@@ -75,12 +25,9 @@ export default function FolderCard({
   onRename,
   onDelete,
   isOverlay = false,
+  dragDisabled = false,
 }: FolderCardProps) {
   const { t } = useTranslation();
-  const { bookmarks, folders } = countInside(node);
-  const idx = Math.abs(hashString(node.id)) % COLORS.length;
-  const colorClass = COLORS[idx];
-  const iconColor = ICON_COLORS[idx];
 
   // ── Inline rename ──────────────────────────────────────────────────────────
   const [isRenaming, setIsRenaming] = useState(false);
@@ -122,7 +69,7 @@ export default function FolderCard({
   // ── DnD ───────────────────────────────────────────────────────────────────
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: node.id,
-    disabled: isOverlay || isRenaming,
+    disabled: isOverlay || isRenaming || dragDisabled,
     data: { type: 'folder' },
   });
 
@@ -136,7 +83,7 @@ export default function FolderCard({
   if (isRenaming) {
     return (
       <div
-        className={`flex flex-col gap-2 p-3 rounded-xl border bg-gradient-to-br ${colorClass}`}
+        className="flex flex-col gap-2 p-3 rounded-lg border bg-background"
       >
         <input
           ref={renameInputRef}
@@ -176,9 +123,14 @@ export default function FolderCard({
         style={style}
         onContextMenu={handleContextMenu}
         onClick={() => !isRenaming && !menuOpen && onClick(node)}
-        className={`group relative flex flex-col gap-1 p-2.5 rounded-xl border bg-gradient-to-br ${colorClass}
-          hover:shadow-md hover:scale-[1.02] transition-all duration-200 overflow-hidden cursor-pointer
-          ${isDropTarget ? 'ring-2 ring-primary shadow-md scale-[1.03] brightness-95' : ''}
+        role="button" tabIndex={0} aria-label={node.title}
+        onKeyDown={(e) => {
+          if (e.target !== e.currentTarget) return;
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(node); }
+        }}
+        className={`folder-card group relative px-3 py-2.5 rounded-lg border bg-background
+          hover:bg-muted/40 hover:border-slate-300 transition-colors duration-150 cursor-pointer
+          ${isDropTarget ? 'ring-2 ring-primary bg-primary/5' : ''}
           ${isDragging ? 'shadow-lg' : ''}
         `}
       >
@@ -193,19 +145,19 @@ export default function FolderCard({
 
         <div className="flex items-center gap-1.5">
           {/* Drag handle */}
-          <div
+          {!dragDisabled && !isOverlay && <div
             {...attributes}
             {...listeners}
-            className="shrink-0 opacity-0 group-hover:opacity-40 hover:!opacity-80 transition-opacity cursor-grab active:cursor-grabbing touch-none"
+            aria-label={t('browse.dragFolder')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-40 focus-visible:opacity-100 transition-opacity cursor-grab active:cursor-grabbing touch-none"
             onClick={(e) => e.stopPropagation()}
           >
             <GripVertical className="w-3 h-3" />
-          </div>
+          </div>}
 
-          <Folder className={`shrink-0 w-4 h-4 ${iconColor}`} />
+          <Folder className="shrink-0 w-5 h-5 mr-1 text-muted-foreground" />
           <span
-            className="flex-1 text-sm font-semibold truncate"
-            onDoubleClick={(e) => { e.stopPropagation(); setIsRenaming(true); }}
+            className="flex-1 text-[13px] font-medium truncate"
           >
             {node.title || '(unnamed)'}
           </span>
@@ -213,23 +165,16 @@ export default function FolderCard({
             <DropdownMenu.Trigger asChild>
               <button
                 onClick={(e) => e.stopPropagation()}
-                className="p-0.5 rounded opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity hover:bg-black/10"
+                title={t('common.more')}
+                className="row-actions p-0.5 rounded opacity-0 group-hover:opacity-60 group-focus-within:opacity-100 transition-opacity hover:bg-muted"
               >
                 <MoreHorizontal className="w-3.5 h-3.5" />
               </button>
             </DropdownMenu.Trigger>
-            <button
-              className="p-0.5 rounded opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity"
-            >
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
+
           </div>
         </div>
 
-        <div className="text-[11px] opacity-70 pl-5">
-          {bookmarks} {t('browse.bookmarks')}
-          {folders > 0 ? ` · ${folders} ${t('browse.subfolders')}` : ''}
-        </div>
       </div>
 
       <DropdownMenu.Portal>

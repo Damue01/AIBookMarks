@@ -1,10 +1,13 @@
 {
   "name": "ai-bookmarks",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AI-powered bookmark organizer for Chrome, Firefox, and Edge",
   "private": true,
   "type": "module",
   "scripts": {
+    "preview": "vite --config preview/vite.config.ts",
+    "build:preview": "vite build --config preview/vite.config.ts",
+    "test": "node --test tests/*.test.mjs",
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
     "build": "node scripts/generate-icons.mjs && wxt build && node scripts/copy-public.mjs",
@@ -13,7 +16,7 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "postinstall": "wxt prepare",
-    "lint": "eslint src --ext .ts,.tsx",
+    "lint": "eslint src preview",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -47,18 +50,22 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@resvg/resvg-js": "^2.6.2",
     "@types/chrome": "^0.0.303",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/webextension-polyfill": "^0.12.1",
+    "@typescript-eslint/parser": "^8.71.1",
     "@vitejs/plugin-react": "^4.3.4",
     "@wxt-dev/module-react": "^1.1.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.20.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
+    "vite": "^6.4.4",
     "wxt": "^0.19.24"
   }
 }

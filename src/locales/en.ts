@@ -1,5 +1,6 @@
 const en = {
   common: {
+    more: 'More actions',
     save: 'Save',
     cancel: 'Cancel',
     confirm: 'Confirm',
@@ -24,6 +25,7 @@ const en = {
     import: 'Import',
   },
   app: {
+    navigation: 'Main navigation',
     name: 'AIBookMarks',
     settings: 'Settings',
   },
@@ -36,6 +38,11 @@ const en = {
 
   // Browse page
   browse: {
+    clearSearch: 'Clear search',
+    dragBookmark: 'Drag bookmark',
+    dragFolder: 'Drag folder',
+    loadError: 'Could not load bookmarks. Please try again.',
+    retry: 'Retry',
     searchPlaceholder: 'Search bookmarks by title or URL...',
     searchResults: '{{count}} results found',
     root: 'Root',

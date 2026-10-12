@@ -47,17 +47,17 @@ export default function OptionsApp() {
         <h1 className="text-lg font-semibold">{t('app.name')} — {t('settings.title')}</h1>
       </div>
 
-      <div className="flex">
+      <div className="flex flex-col sm:flex-row">
         {/* Sidebar */}
-        <nav className="w-56 border-r min-h-[calc(100vh-65px)] p-3 space-y-1 shrink-0">
+        <nav className="flex flex-wrap sm:block sm:w-52 border-b sm:border-b-0 sm:border-r sm:min-h-[calc(100vh-65px)] p-3 sm:space-y-1 shrink-0">
           {tabs.map(({ key, label, icon }) => (
             <button
               key={key}
               onClick={() => setTab(key)}
               className={cn(
-                'w-full flex items-center gap-2 px-3 py-2 rounded text-sm text-left transition-colors',
+                'sm:w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm text-left transition-colors',
                 tab === key
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-primary/10 text-primary font-medium'
                   : 'text-muted-foreground hover:bg-accent hover:text-foreground',
               )}
             >

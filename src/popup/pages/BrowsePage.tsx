@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useDeferredValue } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Search,
@@ -25,7 +25,6 @@ import {
   DragOverEvent,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
@@ -96,7 +95,7 @@ const BROWSE_FOLDER_KEY = 'aibm_browse_folder';
 
 export default function BrowsePage() {
   const { t } = useTranslation();
-  const { tree, loading } = useBookmarksStore();
+  const { tree, loading, error, fetchAll } = useBookmarksStore();
 
   // Navigation state
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
@@ -105,12 +104,6 @@ export default function BrowsePage() {
 
   // Sort state
   const [sortField, setSortField] = useState<SortField>('default');
-  // Frozen sorted items for non-default sorts (only updated on explicit user action)
-  const [frozenFolders, setFrozenFolders] = useState<BookmarkNode[] | null>(null);
-  const [frozenBookmarks, setFrozenBookmarks] = useState<BookmarkNode[] | null>(null);
-  // Track previous folder id to detect navigation
-  const prevFolderIdRef = useRef<string | null | undefined>(undefined);
-
   // Multi-select state
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -180,53 +173,19 @@ export default function BrowsePage() {
     };
   }, [tree, currentFolderId, currentNode]);
 
-  // When navigating to a new folder, re-apply current non-default sort to new content
-  useEffect(() => {
-    // Skip the very first render (no navigation has occurred)
-    if (prevFolderIdRef.current === undefined) {
-      prevFolderIdRef.current = currentFolderId;
-      return;
-    }
-    prevFolderIdRef.current = currentFolderId;
-    if (sortField !== 'default') {
-      setFrozenFolders(sortBookmarkNodes(rawFolders, sortField));
-      setFrozenBookmarks(sortBookmarkNodes(rawBookmarks, sortField));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentFolderId]);
+  // Derive the sorted view from live data so edits, moves and deletes remain visible.
+  const childFolders = useMemo(() => sortBookmarkNodes(rawFolders, sortField), [rawFolders, sortField]);
+  const childBookmarks = useMemo(() => sortBookmarkNodes(rawBookmarks, sortField), [rawBookmarks, sortField]);
+  const handleSortChange = (val: SortField) => setSortField(val);
 
-  // Display: default sort always uses Chrome order; non-default uses frozen snapshot
-  const childFolders = sortField === 'default' ? rawFolders : (frozenFolders ?? rawFolders);
-  const childBookmarks = sortField === 'default' ? rawBookmarks : (frozenBookmarks ?? rawBookmarks);
-
-  // Explicit sort change handler: applies sort immediately and freezes the result
-  const handleSortChange = (val: SortField) => {
-    setSortField(val);
-    if (val === 'default') {
-      setFrozenFolders(null);
-      setFrozenBookmarks(null);
-    } else {
-      setFrozenFolders(sortBookmarkNodes(rawFolders, val));
-      setFrozenBookmarks(sortBookmarkNodes(rawBookmarks, val));
-    }
-  };
-
-  // Search
+  // Flatten once per tree update instead of traversing the tree on every keystroke.
+  const searchableBookmarks = useMemo(() => tree.flatMap(collectAllBookmarks), [tree]);
+  const deferredQuery = useDeferredValue(searchQuery.trim().toLocaleLowerCase());
   const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return null;
-    const query = searchQuery.toLowerCase();
-    const allBookmarks: BookmarkNode[] = [];
-    for (const node of tree) {
-      allBookmarks.push(...collectAllBookmarks(node));
-    }
-    return allBookmarks
-      .filter(
-        (b) =>
-          b.title.toLowerCase().includes(query) ||
-          (b.url && b.url.toLowerCase().includes(query)),
-      )
-      .slice(0, 50);
-  }, [tree, searchQuery]);
+    if (!deferredQuery) return null;
+    return searchableBookmarks.filter((b) =>
+      b.title.toLocaleLowerCase().includes(deferredQuery) || b.url?.toLocaleLowerCase().includes(deferredQuery));
+  }, [searchableBookmarks, deferredQuery]);
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -368,7 +327,13 @@ export default function BrowsePage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  if (loading) {
+  if (error) {
+    return <div role="alert" className="flex h-full flex-col items-center justify-center gap-3 text-sm">
+      <p>{t('browse.loadError')}</p>
+      <button className="rounded-md border px-3 py-1.5 text-primary" onClick={() => fetchAll()}>{t('browse.retry')}</button>
+    </div>;
+  }
+  if (loading && tree.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <span className="text-sm text-muted-foreground">{t('common.loading')}</span>
@@ -381,15 +346,18 @@ export default function BrowsePage() {
   return (
     <div className="flex flex-col h-full">
       {/* Top Bar: Search & Actions */}
-      <div className="px-3 pt-3 pb-2 flex items-center gap-2">
-        <div className="relative flex-1">
+      <div className="px-[18px] pt-0 pb-3 flex items-center gap-2">
+        <div className="relative flex-1 min-w-0">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label={t('browse.searchPlaceholder')}
             placeholder={t('browse.searchPlaceholder')}
-            className="pl-8 h-9 text-sm bg-muted/40 border-border/50 focus-visible:bg-background"
+            className="pl-8 pr-8 h-9 text-[13px] bg-muted/50 border-transparent shadow-none focus-visible:bg-background"
           />
+          {searchQuery && <button title={t('browse.clearSearch')} aria-label={t('browse.clearSearch')}
+            onClick={() => setSearchQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded text-muted-foreground hover:bg-accent"><X className="h-3.5 w-3.5" /></button>}
         </div>
         {!searchResults && currentFolderId && (
           <>
@@ -400,7 +368,7 @@ export default function BrowsePage() {
             />
             <button
               onClick={() => setCreateFolderOpen(true)}
-              className="p-2 rounded-md border border-border/50 bg-muted/30 hover:bg-accent text-muted-foreground transition-colors"
+              className="p-2 rounded-md border border-border bg-background hover:bg-accent text-muted-foreground transition-colors"
               title={t('browse.newFolder')}
             >
               <FolderPlus className="w-4 h-4" />
@@ -456,7 +424,7 @@ export default function BrowsePage() {
               ? t('browse.searchResults', { count: searchResults.length })
               : t('common.noResults')}
           </div>
-          <div className="space-y-0.5">
+          <div className="divide-y divide-border/60">
             {searchResults.map((b) => (
               <BookmarkItem
                 key={b.id}
@@ -464,6 +432,8 @@ export default function BrowsePage() {
                 title={b.title}
                 url={b.url!}
                 dateAdded={b.dateAdded}
+                onDelete={handleDeleteNode} onUpdate={handleUpdateBookmark} onMove={handleMoveRequest}
+                dragDisabled
               />
             ))}
           </div>
@@ -477,7 +447,7 @@ export default function BrowsePage() {
           onDragEnd={handleDragEnd}
         >
           {/* Breadcrumb Navigation */}
-          <div className="px-3 pb-1">
+          <div className="px-[18px] pb-3">
             <div className="flex items-center gap-1 text-xs overflow-x-auto no-scrollbar">
               {currentFolderId && (
                 <button
@@ -513,17 +483,15 @@ export default function BrowsePage() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-1 pb-2">
+          <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-3">
             {/* Folders Grid */}
             {childFolders.length > 0 && (
-              <div className="px-2 pt-1 pb-2">
+              <div className="px-0.5 pt-1 pb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-                    {t('browse.folders')} ({childFolders.length})
+                  <div className="text-xs font-semibold text-foreground">
+                    {t('browse.folders')}
                   </div>
-                  {!isSelecting && sortField === 'default' && (
-                    <div className="text-[10px] text-muted-foreground/60">{t('browse.dragHint')}</div>
-                  )}
+
                 </div>
                 <SortableContext items={childFolders.map(f => f.id)} strategy={rectSortingStrategy}>
                   <div className="grid grid-cols-2 gap-2">
@@ -535,6 +503,7 @@ export default function BrowsePage() {
                         isDropTarget={dropTargetId === folder.id}
                         onRename={handleRenameFolder}
                         onDelete={handleDeleteNode}
+                        dragDisabled={sortField !== 'default' || isSelecting || !currentFolderId}
                       />
                     ))}
                   </div>
@@ -544,12 +513,12 @@ export default function BrowsePage() {
 
             {/* Bookmarks List */}
             {childBookmarks.length > 0 && (
-              <div className="px-2 pt-1">
-                <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-1">
-                  {t('browse.bookmarks')} ({childBookmarks.length})
+              <div className="px-0.5 pt-1">
+                <div className="text-xs font-semibold text-foreground mb-1">
+                  {t('browse.bookmarks')}
                 </div>
                 <SortableContext items={childBookmarks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                  <div className="space-y-0.5">
+                  <div className="divide-y divide-border/60">
                     {childBookmarks.map((b) => (
                       <BookmarkItem
                         key={b.id}
@@ -563,6 +532,7 @@ export default function BrowsePage() {
                         onDelete={handleDeleteNode}
                         onUpdate={handleUpdateBookmark}
                         onMove={handleMoveRequest}
+                        dragDisabled={sortField !== 'default' || !currentFolderId}
                       />
                     ))}
                   </div>

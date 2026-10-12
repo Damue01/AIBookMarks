@@ -4,7 +4,6 @@ import { CSS } from '@dnd-kit/utilities';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import {
   ExternalLink,
-  Globe,
   GripVertical,
   MoreHorizontal,
   Pencil,
@@ -16,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { extractDomain } from '@/shared/utils';
+import BookmarkIcon from '@/components/BookmarkIcon';
 
 export interface BookmarkItemProps {
   id: string;
@@ -33,6 +33,7 @@ export interface BookmarkItemProps {
   onMove?: (id: string) => void;
   /** Set to true when rendering as DragOverlay (no DnD hooks, simplified style) */
   isOverlay?: boolean;
+  dragDisabled?: boolean;
 }
 
 export default function BookmarkItem({
@@ -47,10 +48,10 @@ export default function BookmarkItem({
   onUpdate,
   onMove,
   isOverlay = false,
+  dragDisabled = false,
 }: BookmarkItemProps) {
   const { t } = useTranslation();
   const domain = extractDomain(url);
-  const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
 
   // ── Inline edit state ──────────────────────────────────────────────────────
   const [isEditing, setIsEditing] = useState(false);
@@ -91,7 +92,7 @@ export default function BookmarkItem({
   // ── DnD ───────────────────────────────────────────────────────────────────
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
-    disabled: isOverlay || isEditing || isSelecting,
+    disabled: isOverlay || isEditing || isSelecting || dragDisabled,
     data: { type: 'bookmark' },
   });
 
@@ -112,12 +113,6 @@ export default function BookmarkItem({
     if (!isEditing) {
       chrome.tabs.create({ url });
     }
-  };
-
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    if (isSelecting) return;
-    e.stopPropagation();
-    setIsEditing(true);
   };
 
   const handleCopyUrl = () => {
@@ -185,15 +180,17 @@ export default function BookmarkItem({
       <div
         ref={setNodeRef}
         style={style}
-        className={`group relative flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-accent/60 transition-all duration-150 ${
+        className={`bookmark-row group relative flex items-center gap-3 px-2 py-1.5 hover:bg-accent/60 transition-colors duration-150 cursor-pointer ${
           isSelected ? 'bg-primary/10 ring-1 ring-primary/30' : ''
         } ${isDragging ? 'shadow-lg bg-background' : ''}`}
         onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
         onContextMenu={handleContextMenu}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && handleClick()}
+        onKeyDown={(e) => {
+          if (e.target !== e.currentTarget) return;
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); }
+        }}
       >
         {/* Checkbox (select mode) */}
         {isSelecting && (
@@ -207,11 +204,12 @@ export default function BookmarkItem({
         )}
 
         {/* Drag handle (shown on hover, hidden in select mode) */}
-        {!isSelecting && (
+        {!isSelecting && !dragDisabled && !isOverlay && (
           <div
             {...attributes}
             {...listeners}
-            className="shrink-0 w-4 flex items-center justify-center opacity-0 group-hover:opacity-40 hover:!opacity-80 transition-opacity cursor-grab active:cursor-grabbing touch-none"
+            aria-label={t('browse.dragBookmark')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-3 flex items-center justify-center opacity-0 group-hover:opacity-40 focus-visible:opacity-100 transition-opacity cursor-grab active:cursor-grabbing touch-none"
             onClick={(e) => e.stopPropagation()}
           >
             <GripVertical className="w-3.5 h-3.5 text-muted-foreground" />
@@ -219,22 +217,11 @@ export default function BookmarkItem({
         )}
 
         {/* Favicon */}
-        <div className="shrink-0 w-7 h-7 rounded-md bg-muted/60 flex items-center justify-center overflow-hidden ring-1 ring-border/50">
-          <img
-            src={faviconUrl}
-            alt=""
-            className="w-4 h-4 object-contain"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none';
-              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-            }}
-          />
-          <Globe className="w-3.5 h-3.5 text-muted-foreground hidden" />
-        </div>
+        <BookmarkIcon url={url} title={title} />
 
         {/* Text content */}
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-medium text-foreground truncate leading-tight group-hover:text-primary transition-colors">
+          <div className="text-[13px] font-medium text-foreground truncate leading-tight group-hover:text-primary transition-colors">
             {title || domain || url}
           </div>
           <div className="text-[11px] text-muted-foreground truncate mt-0.5">{domain}</div>
@@ -242,7 +229,7 @@ export default function BookmarkItem({
 
         {/* Action buttons on hover */}
         {!isSelecting && (
-          <div className="shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="row-actions shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -257,7 +244,7 @@ export default function BookmarkItem({
               <button
                 onClick={(e) => e.stopPropagation()}
                 className="p-1 rounded hover:bg-accent transition-colors"
-                title="More"
+                title={t('common.more')}
               >
                 <MoreHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
               </button>

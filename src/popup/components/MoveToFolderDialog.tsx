@@ -104,14 +104,14 @@ export default function MoveToFolderDialog({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 animate-in fade-in-0" />
-        <Dialog.Content className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-sm translate-x-[-50%] translate-y-[-50%] border bg-background shadow-lg duration-200 sm:rounded-xl animate-in fade-in-0 zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-[48%]">
+        <Dialog.Content aria-describedby={undefined} className="fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-24px)] max-w-sm translate-x-[-50%] translate-y-[-50%] border bg-background shadow-lg duration-200 rounded-xl animate-in fade-in-0 zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-[48%]">
           {/* Header */}
           <div className="flex items-center gap-2 px-4 pt-4 pb-2">
             <FolderInput className="w-5 h-5 text-primary" />
             <Dialog.Title className="text-base font-semibold leading-none">
               {t('browse.moveToFolder')}
             </Dialog.Title>
-            <Dialog.Close className="ml-auto rounded-sm opacity-70 hover:opacity-100 transition-opacity">
+            <Dialog.Close aria-label={t('common.close')} className="ml-auto rounded-sm opacity-70 hover:opacity-100 transition-opacity">
               <X className="h-4 w-4" />
             </Dialog.Close>
           </div>
@@ -125,6 +125,7 @@ export default function MoveToFolderDialog({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('browse.searchFolderPlaceholder')}
+                aria-label={t('browse.searchFolderPlaceholder')}
                 className="flex h-8 w-full rounded-md border border-input bg-muted/40 pl-8 pr-3 py-1 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               />
             </div>

@@ -1,6 +1,6 @@
 # Privacy Policy for AIBookMarks
 
-**Last updated: February 22, 2026**
+**Last updated: October 12, 2026**
 
 ## Overview
 
@@ -34,10 +34,15 @@ This data is sent **directly from your browser to the AI API endpoint you config
 
 ## Permissions Explained
 
+### Website icons
+
+On Chrome and Edge, icons are first read from the browser's local favicon cache. A local cache comparison detects the browser's generic icon when no favicon is cached. If the cache is missing or fails, or on Firefox, the extension requests `/favicon.ico` directly from the bookmarked website's origin without a referrer. No bookmark paths or query parameters are sent in that request. If an icon fails or times out, a local initial or globe is shown. Bookmark URLs are never sent to third-party favicon aggregators.
+
 | Permission | Why it's needed |
 |---|---|
 | `bookmarks` | Core functionality: read, create, move, and organize your bookmarks |
 | `storage` | Store your settings, AI configuration, and custom rules locally |
+| `favicon` (Chrome / Edge only) | Display website icons from the browser's local favicon cache |
 | Content Script (`<all_urls>`) | Display a small toast notification on the current page when a new bookmark is auto-classified. No page content is read or collected. |
 
 ## Data Sharing
@@ -46,7 +51,7 @@ We do **not**:
 
 - Collect analytics or telemetry
 - Use tracking scripts or pixels
-- Share any data with third parties (beyond your chosen AI provider as described above)
+- Share bookmark data with third-party aggregators (AI requests and direct website icon requests are described above)
 - Store any data on external servers
 
 ## Open Source

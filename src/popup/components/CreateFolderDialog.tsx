@@ -27,7 +27,7 @@ export default function CreateFolderDialog({ open, onOpenChange, onCreate }: Cre
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 animate-in fade-in-0" />
-        <Dialog.Content className="fixed left-[50%] top-[50%] z-50 grid w-full max-w-sm translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-xl animate-in fade-in-0 zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-[48%]">
+        <Dialog.Content aria-describedby={undefined} className="fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-24px)] max-w-sm translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 rounded-xl animate-in fade-in-0 zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-[48%]">
           <div className="flex flex-col space-y-1.5 text-center sm:text-left">
             <Dialog.Title className="text-lg font-semibold leading-none tracking-tight flex items-center gap-2">
               <FolderPlus className="w-5 h-5 text-primary" />
