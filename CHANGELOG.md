@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- Give the native browser action popup an intrinsic document size so it opens at 560 × 520 instead of collapsing to a narrow strip. The standalone preview remains responsive.
+
 ## 1.1.0
 
 - Simplify the popup with neutral folder cards, compact bookmark rows, and a quieter navigation bar.

@@ -1,0 +1,8 @@
+/* A browser action popup measures its viewport from its document's intrinsic size.
+   Viewport units alone create a circular dependency and collapse the native popup. */
+html,
+body {
+  width: 560px;
+  height: 520px;
+  overflow: hidden;
+}

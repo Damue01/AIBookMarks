@@ -10,7 +10,7 @@ export default defineConfig({
   manifest: {
     name: 'AIBookMarks',
     description: 'AI-powered bookmark organizer',
-    version: '1.1.0',
+    version: '1.1.1',
     permissions: [
       'bookmarks',
       'storage',

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from '@/popup/App';
 import '@/assets/globals.css';
+import './popup.css';
 import { initI18n } from '@/services/i18n';
 import { DEFAULT_SETTINGS, STORAGE_KEYS } from '@/shared/constants';
 
